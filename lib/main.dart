@@ -30,31 +30,38 @@ class QuizPage extends StatefulWidget {
 
 class _QuizPageState extends State<QuizPage> {
   List<Icon> scoreKeeper = [];
+  int correctAnswers = 0;
+  int incorrectAnswers = 0;
 
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getCorrectAnswer();
 
     setState(() {
       if (quizBrain.isFinished()) {
-        Alert(context: context, title: "RFLUTTER", desc: "Flutter is awesome.")
+        Alert(
+                context: context,
+                title: "GOOD JOB!",
+                desc:
+                    "You scored $correctAnswers/${correctAnswers + incorrectAnswers}")
             .show();
         quizBrain.reset();
         scoreKeeper.clear();
-      }
-
-      //TODO: Step 5 - If we've not reached the end, ELSE do the answer checking steps below 👇
-      if (userPickedAnswer == correctAnswer) {
-        scoreKeeper.add(Icon(
-          Icons.check,
-          color: Colors.green,
-        ));
       } else {
-        scoreKeeper.add(Icon(
-          Icons.close,
-          color: Colors.red,
-        ));
+        if (userPickedAnswer == correctAnswer) {
+          correctAnswers++;
+          scoreKeeper.add(Icon(
+            Icons.check,
+            color: Colors.green,
+          ));
+        } else {
+          incorrectAnswers++;
+          scoreKeeper.add(Icon(
+            Icons.close,
+            color: Colors.red,
+          ));
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
 
